@@ -1,0 +1,6 @@
+1、
+初始化
+m_log.Init("StatusLog.txt");
+2、使用
+m_log.LogOut("good");
+m_log.LogOut("测试");
