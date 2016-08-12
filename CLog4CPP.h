@@ -3,7 +3,7 @@
 **
 **	FILENAME			CLog4CPP.h
 **
-**	PURPOSE				这是一个C++的日志工具类
+**	PURPOSE				这是一个C++的日志工具类,兼容ASNI和UINCODE编码
 **
 **	CREATION DATE		2016-08-12
 **
