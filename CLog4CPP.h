@@ -14,6 +14,12 @@
 **  Git                 https://github.com/itas109
 **
 **************************************************************************************
+**  author: itas109  date:2016-08-15
+**  Blog：blog.csdn.net/itas109
+**  改进
+**  1） Init方法增加默认初始化名称
+**  2） 精简代码
+**  3） 优化编码兼容性
 */
 #ifndef CLOG4CPP_H
 #define CLOG4CPP_H
@@ -28,7 +34,7 @@ public:
 	~CLog4CPP();
 
 	//初始化
-	void Init(std::string stringpOutputFilename);
+	void Init(std::string stringpOutputFilename = "CLog4CPP_itas109.log");
 
 	//输出文字，类似与TRACE、printf
 	BOOL LogOut(std::string text);
@@ -39,18 +45,11 @@ public:
 	//是否在每行加入时间戳
 	void IsPrintTime(BOOL b) {m_bPrintTime = b;}
 
-	//是否在每行加入程序名称
-	void IsPrintAppName(BOOL b) {m_bPrintAppName = b;}
-
-	//设置程序名称 
-	void SetAppName(const char *pName) {m_csAppName = pName;}
-
 protected:
 	//缓冲区
 	enum {TBUF_SIZE = 3000};
 	std::string m_tBuf[TBUF_SIZE];
 
-	std::string m_csAppName;
 	std::string m_csFileName;
 	
 
@@ -60,11 +59,10 @@ protected:
 	//使能
 	BOOL m_bEnable;
 	BOOL m_bPrintTime;
-	BOOL m_bPrintAppName;
 
 	//字符工具
 	std::string GetBaseDir(std::string & path);
-	std::string GetBaseName(std::string & path);
+	std::string GetFileExtensions(std::string & fileName);
 
 };
 

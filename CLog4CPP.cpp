@@ -5,10 +5,7 @@ CLog4CPP::CLog4CPP()
 {
 	m_bEnable = FALSE;
 	m_bPrintTime = TRUE;//默认加入时间戳
-	m_bPrintAppName = FALSE;
 	m_csFileName = "";
-
-	m_csAppName = "";
 
 	//初始化临界区
 	InitializeCriticalSection(&m_crit);
@@ -24,8 +21,13 @@ void CLog4CPP::Init(std::string pOutputFilename)
 {
 	m_bEnable = TRUE;
 
+	if(GetFileExtensions(pOutputFilename) == "")
+	{
+		pOutputFilename += ".log";
+	}
+	
 	//获取程序路径和名称
-	TCHAR m_ctsFileName[MAX_PATH];
+	TCHAR m_ctsFileName[MAX_PATH] = {0};
 
 	DWORD res = GetModuleFileName(AfxGetInstanceHandle(), m_ctsFileName, MAX_PATH);
 
@@ -37,12 +39,11 @@ void CLog4CPP::Init(std::string pOutputFilename)
 	WideCharToMultiByte(CP_ACP, 0, m_ctsFileName, -1, chRtn, iLen, NULL, NULL);
 	path = std::string(chRtn);
 	delete chRtn;
+	chRtn = NULL;
 #else
 	path = std::string(m_ctsFileName);
 #endif
 	std::string appDir = GetBaseDir(path);
-
-	m_csAppName = GetBaseName(path);
 	
 	m_csFileName = appDir + "\\" + pOutputFilename;
 	
@@ -71,30 +72,31 @@ BOOL CLog4CPP::LogOut(std::string text)
 	BOOL bOK = FALSE;
 
 	// output 
-	FILE *fp;
-	TCHAR wc[MAX_PATH];
-	_stprintf_s(wc,_T("%S"),m_csFileName.c_str());//
-	
-	_tfopen_s(&fp,wc,_T("a"));
+	FILE *fp = NULL;
+	TCHAR wc[MAX_PATH] = {0};
+#ifdef UNICODE
+	_stprintf_s(wc, MAX_PATH, _T("%S"), m_csFileName.c_str());//%S宽字符
+#else
+	_stprintf_s(wc, MAX_PATH, _T("%s"), m_csFileName.c_str());//%s单字符
+#endif
+	_tfopen_s(&fp, wc, _T("a"));
 	if (fp)
 	{
-		if (m_bPrintAppName)
-		{
-			_ftprintf_s(fp,_T("%s : "), m_csAppName);
-		}
-
 		if (m_bPrintTime)
 		{
 			CTime ct ; 
 			ct = CTime::GetCurrentTime();
 			_ftprintf_s(fp,_T("%s : "),ct.Format("%Y-%m-%d %H:%M:%S"));
 		}
-
-		TCHAR txt[MAX_PATH];
-		_stprintf_s(txt,_T("%S"),text.c_str());
-		_ftprintf_s(fp, _T("%s\n"), txt);		
+#ifdef UNICODE
+		_ftprintf_s(fp, _T("%S\n"), text.c_str());
+#else
+		_ftprintf_s(fp, _T("%s\n"), text.c_str());
+#endif
 
 		fclose(fp);
+
+		fp = NULL;
 
 		bOK = TRUE;
 	}
@@ -104,18 +106,18 @@ BOOL CLog4CPP::LogOut(std::string text)
 	return bOK;
 }
 
-std::string	CLog4CPP::GetBaseName(std::string &path)
+std::string	CLog4CPP::GetFileExtensions(std::string &fileName)
 {
-	std::string out = path;
+	std::string out = fileName;
 
-	int iSlashPos = path.find_last_of('\\');
-	if (iSlashPos !=-1) 
+	int iSlashPos = fileName.find_last_of('\\');
+	if (iSlashPos !=-1)
 	{
 		out = out.substr(iSlashPos+1);
 	}
 	else
 	{
-		iSlashPos = path.find_last_of('/');
+		iSlashPos = fileName.find_last_of('/');
 		if (iSlashPos !=-1) 
 		{
 			out = out.substr(iSlashPos+1);
@@ -125,7 +127,11 @@ std::string	CLog4CPP::GetBaseName(std::string &path)
 	int iDotPos = out.find_last_of('.');
 	if (iDotPos>0)
 	{
-		out = out.substr(0,iDotPos);
+		out = out.substr(iDotPos);
+	}
+	else
+	{
+		out = "";
 	}
 
 	return out;
