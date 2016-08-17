@@ -17,14 +17,15 @@ CLog4CPP::~CLog4CPP()
 	DeleteCriticalSection(&m_crit);
 }
 
-void CLog4CPP::Init(std::string pOutputFilename)
+void CLog4CPP::Init()
 {
 	m_bEnable = TRUE;
 
-	if(GetFileExtensions(pOutputFilename) == "")
-	{
-		pOutputFilename += ".log";
-	}
+	CTime t = CTime::GetCurrentTime();	
+
+	std::string pOutputFilename;
+	//用时间命名文件名称
+	pOutputFilename = int2string(t.GetYear()) + "-" + int2string(t.GetMonth()) + "-" + int2string(t.GetDay()) + ".log";
 	
 	//获取程序路径和名称
 	TCHAR m_ctsFileName[MAX_PATH] = {0};
@@ -44,11 +45,43 @@ void CLog4CPP::Init(std::string pOutputFilename)
 	path = std::string(m_ctsFileName);
 #endif
 	std::string appDir = GetBaseDir(path);
+
+	_mkdir("Log");//创建Log文件夹
 	
-	m_csFileName = appDir + "\\" + pOutputFilename;
-	
-	// overwrite the old one!
-	//remove(m_csFileName.c_str());
+	m_csFileName = appDir + "\\Log\\" + pOutputFilename;
+}
+
+void CLog4CPP::Init(std::string pOutputFilename)
+{
+	m_bEnable = TRUE;
+
+	if(GetFileExtensions(pOutputFilename) == "")
+	{
+		pOutputFilename += ".log";
+	}
+
+	//获取程序路径和名称
+	TCHAR m_ctsFileName[MAX_PATH] = {0};
+
+	DWORD res = GetModuleFileName(AfxGetInstanceHandle(), m_ctsFileName, MAX_PATH);
+
+	std::string path;
+
+#ifdef UNICODE
+	int iLen = WideCharToMultiByte(CP_ACP, 0,m_ctsFileName, -1, NULL, 0, NULL, NULL);
+	char* chRtn =new char[iLen*sizeof(char)];
+	WideCharToMultiByte(CP_ACP, 0, m_ctsFileName, -1, chRtn, iLen, NULL, NULL);
+	path = std::string(chRtn);
+	delete chRtn;
+	chRtn = NULL;
+#else
+	path = std::string(m_ctsFileName);
+#endif
+	std::string appDir = GetBaseDir(path);
+
+	_mkdir("Log1");//创建Log文件夹
+
+	m_csFileName = appDir + "\\Log\\" + pOutputFilename;
 }
 
 void CLog4CPP::IsEnable(BOOL bEnable)
@@ -155,4 +188,14 @@ std::string CLog4CPP::GetBaseDir(std::string & path)
 	}
 
 	return out;
+}
+
+//int转string
+std::string CLog4CPP::int2string(int in)
+{
+	stringstream ss;
+	std::string str;
+	ss << in;
+	ss >> str;
+	return str;
 }

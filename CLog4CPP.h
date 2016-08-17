@@ -20,11 +20,20 @@
 **  1） Init方法增加默认初始化名称
 **  2） 精简代码
 **  3） 优化编码兼容性
+**************************************************************************************
+**  author: itas109  date:2016-08-17
+**  Blog：blog.csdn.net/itas109
+**  改进
+**  1） Init方法重载，用时间命名文件名
+**  2） 日志文件默认放到Log文件夹下
+**  3） 增加int2string方法，用于数字与字符的转换
 */
 #ifndef CLOG4CPP_H
 #define CLOG4CPP_H
 
 #include<string>
+#include <sstream>
+#include <direct.h>
 
 class CLog4CPP
 {
@@ -34,7 +43,8 @@ public:
 	~CLog4CPP();
 
 	//初始化
-	void Init(std::string stringpOutputFilename = "CLog4CPP_itas109.log");
+	void Init(std::string stringpOutputFilename);
+	void Init();//按照当天日期生成日志文件
 
 	//输出文字，类似与TRACE、printf
 	BOOL LogOut(std::string text);
@@ -63,6 +73,7 @@ protected:
 	//字符工具
 	std::string GetBaseDir(std::string & path);
 	std::string GetFileExtensions(std::string & fileName);
+	std::string int2string(int in);
 
 };
 
