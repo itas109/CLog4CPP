@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "CLog4CPP.h"
 
 CLog4CPP::CLog4CPP()
@@ -21,7 +20,7 @@ void CLog4CPP::Init()
 {
 	m_bEnable = TRUE;
 
-	CTime t = CTime::GetCurrentTime();	
+	CTime t = CTime::GetCurrentTime();
 
 	std::string pOutputFilename;
 	//用时间命名文件名称
@@ -30,7 +29,7 @@ void CLog4CPP::Init()
 	//获取程序路径和名称
 	TCHAR m_ctsFileName[MAX_PATH] = {0};
 
-	DWORD res = GetModuleFileName(AfxGetInstanceHandle(), m_ctsFileName, MAX_PATH);
+	DWORD res = GetModuleFileName(GetModuleHandle(0), m_ctsFileName, MAX_PATH);
 
 	std::string path;
 
@@ -63,7 +62,9 @@ void CLog4CPP::Init(std::string pOutputFilename)
 	//获取程序路径和名称
 	TCHAR m_ctsFileName[MAX_PATH] = {0};
 
-	DWORD res = GetModuleFileName(AfxGetInstanceHandle(), m_ctsFileName, MAX_PATH);
+	//DWORD res = GetModuleFileName(AfxGetInstanceHandle(), m_ctsFileName, MAX_PATH);
+
+	DWORD res = GetModuleFileName(GetModuleHandle(0), m_ctsFileName, MAX_PATH);
 
 	std::string path;
 
@@ -84,12 +85,12 @@ void CLog4CPP::Init(std::string pOutputFilename)
 	m_csFileName = appDir + "\\Log\\" + pOutputFilename;
 }
 
-void CLog4CPP::IsEnable(BOOL bEnable)
+void CLog4CPP::IsEnable(bool bEnable)
 {
 	m_bEnable = bEnable;
 }
 
-BOOL CLog4CPP::LogOut(std::string text)
+bool CLog4CPP::LogOut(std::string text)
 {
 	if (m_csFileName.size() == 0)
 		return FALSE;
@@ -102,7 +103,7 @@ BOOL CLog4CPP::LogOut(std::string text)
 
 	EnterCriticalSection(&m_crit);
 
-	BOOL bOK = FALSE;
+	bool bOK = FALSE;
 
 	// output 
 	FILE *fp = NULL;
@@ -117,9 +118,14 @@ BOOL CLog4CPP::LogOut(std::string text)
 	{
 		if (m_bPrintTime)
 		{
-			CTime ct ; 
-			ct = CTime::GetCurrentTime();
-			_ftprintf_s(fp,_T("%s : "),ct.Format("%Y-%m-%d %H:%M:%S"));
+			CTime t ; 
+			t = CTime::GetCurrentTime();
+			std::string time = int2string(t.GetYear()) + "-" + int2string(t.GetMonth()) + "-" + int2string(t.GetDay()) +" "+ int2string(t.GetHour()) +":"+ int2string(t.GetMinute()) +":"+ int2string(t.GetSecond());
+#ifdef UNICODE
+			_ftprintf_s(fp,_T("%S : "),time.c_str());
+#else
+			_ftprintf_s(fp,_T("%s : "),time.c_str());
+#endif
 		}
 #ifdef UNICODE
 		_ftprintf_s(fp, _T("%S\n"), text.c_str());
@@ -193,7 +199,7 @@ std::string CLog4CPP::GetBaseDir(std::string & path)
 //int转string
 std::string CLog4CPP::int2string(int in)
 {
-	stringstream ss;
+	std::stringstream ss;
 	std::string str;
 	ss << in;
 	ss >> str;

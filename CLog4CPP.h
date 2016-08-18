@@ -27,13 +27,19 @@
 **  1） Init方法重载，用时间命名文件名
 **  2） 日志文件默认放到Log文件夹下
 **  3） 增加int2string方法，用于数字与字符的转换
+**************************************************************************************
+**  author: itas109  date:2016-08-18
+**  Blog：blog.csdn.net/itas109
+**  改进
+**  1） 取出MFC的依赖
+**  2） 采用C++通用数据类型
 */
-#ifndef CLOG4CPP_H
-#define CLOG4CPP_H
+#pragma once
 
-#include<string>
+#include <string>
 #include <sstream>
 #include <direct.h>
+#include "atltime.h"
 
 class CLog4CPP
 {
@@ -47,13 +53,13 @@ public:
 	void Init();//按照当天日期生成日志文件
 
 	//输出文字，类似与TRACE、printf
-	BOOL LogOut(std::string text);
+	bool LogOut(std::string text);
 
 	//设置使能
-	void IsEnable(BOOL bEnable);
+	void IsEnable(bool bEnable);
 
 	//是否在每行加入时间戳
-	void IsPrintTime(BOOL b) {m_bPrintTime = b;}
+	void IsPrintTime(bool b) {m_bPrintTime = b;}
 
 protected:
 	//缓冲区
@@ -62,13 +68,12 @@ protected:
 
 	std::string m_csFileName;
 	
-
 	//临界区
 	CRITICAL_SECTION  m_crit;
 
 	//使能
-	BOOL m_bEnable;
-	BOOL m_bPrintTime;
+	bool m_bEnable;
+	bool m_bPrintTime;
 
 	//字符工具
 	std::string GetBaseDir(std::string & path);
@@ -76,5 +81,3 @@ protected:
 	std::string int2string(int in);
 
 };
-
-#endif CLOG4CPP_H

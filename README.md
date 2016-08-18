@@ -29,4 +29,11 @@ Git:https://github.com/itas109
 * 日志文件默认放到Log文件夹下
 * 增加int2string方法，用于数字与字符的转换
 
+----------------------------------------------------
+* author: itas109  date:2016-08-18
+* Blog：blog.csdn.net/itas109
+
+* 取出MFC的依赖
+* 采用C++通用数据类型
+
 
