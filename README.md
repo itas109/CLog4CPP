@@ -33,7 +33,7 @@ Git:https://github.com/itas109
 * author: itas109  date:2016-08-18
 * Blog：blog.csdn.net/itas109
 
-* 取出MFC的依赖
+* 去除对MFC的依赖
 * 采用C++通用数据类型
 
 

@@ -31,7 +31,7 @@
 **  author: itas109  date:2016-08-18
 **  Blog：blog.csdn.net/itas109
 **  改进
-**  1） 取出MFC的依赖
+**  1） 去除对MFC的依赖
 **  2） 采用C++通用数据类型
 */
 #pragma once
