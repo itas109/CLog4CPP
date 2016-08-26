@@ -35,5 +35,11 @@ Git:https://github.com/itas109
 
 * 去除对MFC的依赖
 * 采用C++通用数据类型
+----------------------------------------------------
+* author: itas109  date:2016-08-26
+* Blog：blog.csdn.net/itas109
+
+**  采用通用性的#ifndef替换#pragma once
+**  替换一些宏定义
 
 

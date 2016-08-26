@@ -33,8 +33,15 @@
 **  改进
 **  1） 去除对MFC的依赖
 **  2） 采用C++通用数据类型
+**************************************************************************************
+**  author: itas109  date:2016-08-26
+**  Blog：blog.csdn.net/itas109
+**  改进
+**  1） 采用通用性的#ifndef替换#pragma once
+**  2） 替换一些宏定义
 */
-#pragma once
+#ifndef CLOG4CPP_H
+#define CLOG4CPP_H
 
 #include <string>
 #include <sstream>
@@ -81,3 +88,4 @@ protected:
 	std::string int2string(int in);
 
 };
+#endif CLOG4CPP_H

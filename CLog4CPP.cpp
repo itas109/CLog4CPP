@@ -2,8 +2,8 @@
 
 CLog4CPP::CLog4CPP()
 {
-	m_bEnable = FALSE;
-	m_bPrintTime = TRUE;//默认加入时间戳
+	m_bEnable = false;
+	m_bPrintTime = true;//默认加入时间戳
 	m_csFileName = "";
 
 	//初始化临界区
@@ -18,7 +18,7 @@ CLog4CPP::~CLog4CPP()
 
 void CLog4CPP::Init()
 {
-	m_bEnable = TRUE;
+	m_bEnable = true;
 
 	CTime t = CTime::GetCurrentTime();
 
@@ -52,7 +52,7 @@ void CLog4CPP::Init()
 
 void CLog4CPP::Init(std::string pOutputFilename)
 {
-	m_bEnable = TRUE;
+	m_bEnable = true;
 
 	if(GetFileExtensions(pOutputFilename) == "")
 	{
@@ -93,17 +93,17 @@ void CLog4CPP::IsEnable(bool bEnable)
 bool CLog4CPP::LogOut(std::string text)
 {
 	if (m_csFileName.size() == 0)
-		return FALSE;
+		return false;
 
 	if (!m_bEnable)
-		return TRUE;
+		return true;
 
 	//if (!AfxIsValidString(text, -1))
-	//	return FALSE;
+	//	return false;
 
 	EnterCriticalSection(&m_crit);
 
-	bool bOK = FALSE;
+	bool bOK = false;
 
 	// output 
 	FILE *fp = NULL;
@@ -137,7 +137,7 @@ bool CLog4CPP::LogOut(std::string text)
 
 		fp = NULL;
 
-		bOK = TRUE;
+		bOK = true;
 	}
 
 	LeaveCriticalSection(&m_crit);
