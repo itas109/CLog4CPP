@@ -24,7 +24,9 @@ void CLog4CPP::Init()
 
 	std::string pOutputFilename;
 	//用时间命名文件名称
-	pOutputFilename = int2string(t.GetYear()) + "-" + int2string(t.GetMonth()) + "-" + int2string(t.GetDay()) + ".log";
+	char buffer[256] = {0};
+	sprintf(buffer, "%04d-%02d-%02d.log", t.GetYear(),t.GetMonth(),t.GetDay());
+	pOutputFilename = std::string(buffer);
 	
 	//获取程序路径和名称
 	TCHAR m_ctsFileName[MAX_PATH] = {0};
@@ -120,7 +122,9 @@ bool CLog4CPP::LogOut(std::string text)
 		{
 			CTime t ; 
 			t = CTime::GetCurrentTime();
-			std::string time = int2string(t.GetYear()) + "-" + int2string(t.GetMonth()) + "-" + int2string(t.GetDay()) +" "+ int2string(t.GetHour()) +":"+ int2string(t.GetMinute()) +":"+ int2string(t.GetSecond());
+			char buffer[256] = {0};
+			sprintf(buffer, "%04d-%02d-%02d %02d:%02d:%02d", t.GetYear(),t.GetMonth(),t.GetDay(),t.GetHour(),t.GetMinute(),t.GetSecond());
+			std::string time = std::string(buffer);
 #ifdef UNICODE
 			_ftprintf_s(fp,_T("%S : "),time.c_str());
 #else
@@ -194,14 +198,4 @@ std::string CLog4CPP::GetBaseDir(std::string & path)
 	}
 
 	return out;
-}
-
-//int转string
-std::string CLog4CPP::int2string(int in)
-{
-	std::stringstream ss;
-	std::string str;
-	ss << in;
-	ss >> str;
-	return str;
 }

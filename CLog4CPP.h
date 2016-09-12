@@ -39,6 +39,12 @@
 **  改进
 **  1） 采用通用性的#ifndef替换#pragma once
 **  2） 替换一些宏定义
+**************************************************************************************
+**  author: itas109  date:2016-09-12
+**  Blog：blog.csdn.net/itas109
+**  改进
+**  1） 去除int2string函数
+**  2） 时间格式统一为xxxx-xx-xx xx:xx:xx，不足为补0，如2016-09-12 16:28:01
 */
 #ifndef CLOG4CPP_H
 #define CLOG4CPP_H
@@ -85,7 +91,5 @@ protected:
 	//字符工具
 	std::string GetBaseDir(std::string & path);
 	std::string GetFileExtensions(std::string & fileName);
-	std::string int2string(int in);
-
 };
 #endif CLOG4CPP_H
