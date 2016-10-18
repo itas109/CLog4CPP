@@ -50,3 +50,9 @@ Git:https://github.com/itas109
 * 去除int2string函数
 * 时间格式统一为xxxx-xx-xx xx:xx:xx，不足为补0，如2016-09-12 16:28:01
 
+----------------------------------------------------
+* author: itas109  date:2016-10-13
+* Blog：blog.csdn.net/itas109
+
+* _mkdir创建文件夹时，参数采用绝对路径，防止自启动时无法创建文件夹
+
