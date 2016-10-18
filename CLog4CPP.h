@@ -50,6 +50,12 @@
 **  Blog：blog.csdn.net/itas109
 **  改进
 **  _mkdir创建文件夹时，参数采用绝对路径，防止自启动时无法创建文件夹
+**************************************************************************************
+**  author: itas109  date:2017-03-29
+**  Blog：blog.csdn.net/itas109
+**  改进
+**  1) 修复指针释放问题
+**  2) LogOut函数增加是否覆盖写入文件参数
 */
 #ifndef CLOG4CPP_H
 #define CLOG4CPP_H
@@ -71,7 +77,8 @@ public:
 	void Init();//按照当天日期生成日志文件
 
 	//输出文字，类似与TRACE、printf
-	bool LogOut(std::string text);
+	//isOverlayWrite 是否覆盖写入文件
+	bool LogOut(std::string text, bool isOverlayWrite = false);
 
 	//设置使能
 	void IsEnable(bool bEnable);

@@ -25,7 +25,7 @@ void CLog4CPP::Init()
 	std::string pOutputFilename;
 	//用时间命名文件名称
 	char buffer[256] = {0};
-	sprintf(buffer, "%04d-%02d-%02d.log", t.GetYear(),t.GetMonth(),t.GetDay());
+	sprintf(buffer, "%04d-%02d-%02d.log", t.GetYear(), t.GetMonth(), t.GetDay());
 	pOutputFilename = std::string(buffer);
 	
 	//获取程序路径和名称
@@ -40,7 +40,7 @@ void CLog4CPP::Init()
 	char* chRtn =new char[iLen*sizeof(char)];
 	WideCharToMultiByte(CP_ACP, 0, m_ctsFileName, -1, chRtn, iLen, NULL, NULL);
 	path = std::string(chRtn);
-	delete chRtn;
+	delete [] chRtn;
 	chRtn = NULL;
 #else
 	path = std::string(m_ctsFileName);
@@ -77,7 +77,7 @@ void CLog4CPP::Init(std::string pOutputFilename)
 	char* chRtn =new char[iLen*sizeof(char)];
 	WideCharToMultiByte(CP_ACP, 0, m_ctsFileName, -1, chRtn, iLen, NULL, NULL);
 	path = std::string(chRtn);
-	delete chRtn;
+	delete [] chRtn;
 	chRtn = NULL;
 #else
 	path = std::string(m_ctsFileName);
@@ -96,7 +96,7 @@ void CLog4CPP::IsEnable(bool bEnable)
 	m_bEnable = bEnable;
 }
 
-bool CLog4CPP::LogOut(std::string text)
+bool CLog4CPP::LogOut(std::string text,bool isOverlayWrite)
 {
 	if (m_csFileName.size() == 0)
 		return false;
@@ -119,7 +119,15 @@ bool CLog4CPP::LogOut(std::string text)
 #else
 	_stprintf_s(wc, MAX_PATH, _T("%s"), m_csFileName.c_str());//%s单字符
 #endif
-	_tfopen_s(&fp, wc, _T("a"));
+	if (isOverlayWrite)
+	{
+		_tfopen_s(&fp, wc, _T("w+"));//覆盖写入
+	}
+	else
+	{
+		_tfopen_s(&fp, wc, _T("a"));//追加写入
+	}
+	
 	if (fp)
 	{
 		if (m_bPrintTime)
