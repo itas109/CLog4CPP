@@ -47,7 +47,9 @@ void CLog4CPP::Init()
 #endif
 	std::string appDir = GetBaseDir(path);
 
-	_mkdir("Log");//创建Log文件夹
+	std::string logDir = appDir + "\\Log";
+
+	_mkdir(logDir.c_str());//创建Log文件夹
 	
 	m_csFileName = appDir + "\\Log\\" + pOutputFilename;
 }
@@ -82,7 +84,9 @@ void CLog4CPP::Init(std::string pOutputFilename)
 #endif
 	std::string appDir = GetBaseDir(path);
 
-	_mkdir("Log1");//创建Log文件夹
+	std::string logDir = appDir + "\\Log";
+
+	_mkdir(logDir.c_str());//创建Log文件夹
 
 	m_csFileName = appDir + "\\Log\\" + pOutputFilename;
 }
