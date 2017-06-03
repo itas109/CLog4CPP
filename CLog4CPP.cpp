@@ -1,31 +1,34 @@
 #include "CLog4CPP.h"
 
-CLog4CPP::CLog4CPP()
+itas109::CLog4CPP::CLog4CPP()
 {
 	m_bEnable = false;
 	m_bPrintTime = true;//默认加入时间戳
+	m_bNamedByDate = false;
 	m_csFileName = "";
 
 	//初始化临界区
 	InitializeCriticalSection(&m_crit);
 }
 
-CLog4CPP::~CLog4CPP()
+itas109::CLog4CPP::~CLog4CPP()
 {
 	//释放临界区
 	DeleteCriticalSection(&m_crit);
 }
 
-void CLog4CPP::Init()
+void itas109::CLog4CPP::Init()
 {
 	m_bEnable = true;
+
+	m_bNamedByDate = true;
 
 	CTime t = CTime::GetCurrentTime();
 
 	std::string pOutputFilename;
 	//用时间命名文件名称
 	char buffer[256] = {0};
-	sprintf(buffer, "%04d-%02d-%02d.log", t.GetYear(), t.GetMonth(), t.GetDay());
+	sprintf_s(buffer,256, "%04d-%02d-%02d.log", t.GetYear(), t.GetMonth(), t.GetDay());
 	pOutputFilename = std::string(buffer);
 	
 	//获取程序路径和名称
@@ -54,9 +57,11 @@ void CLog4CPP::Init()
 	m_csFileName = appDir + "\\Log\\" + pOutputFilename;
 }
 
-void CLog4CPP::Init(std::string pOutputFilename)
+void itas109::CLog4CPP::Init(std::string pOutputFilename)
 {
 	m_bEnable = true;
+
+	m_bNamedByDate = false;
 
 	if(GetFileExtensions(pOutputFilename) == "")
 	{
@@ -91,18 +96,24 @@ void CLog4CPP::Init(std::string pOutputFilename)
 	m_csFileName = appDir + "\\Log\\" + pOutputFilename;
 }
 
-void CLog4CPP::IsEnable(bool bEnable)
+void itas109::CLog4CPP::IsEnable(bool bEnable)
 {
 	m_bEnable = bEnable;
 }
 
-bool CLog4CPP::LogOut(std::string text,bool isOverlayWrite)
+bool itas109::CLog4CPP::LogOut(std::string text, bool isOverlayWrite)
 {
 	if (m_csFileName.size() == 0)
 		return false;
 
 	if (!m_bEnable)
 		return true;
+
+	if (m_bNamedByDate)
+	{
+		//fixed bug:when application run after one day, log file is old problem
+		Init();
+	}
 
 	//if (!AfxIsValidString(text, -1))
 	//	return false;
@@ -135,7 +146,7 @@ bool CLog4CPP::LogOut(std::string text,bool isOverlayWrite)
 			CTime t ; 
 			t = CTime::GetCurrentTime();
 			char buffer[256] = {0};
-			sprintf(buffer, "%04d-%02d-%02d %02d:%02d:%02d", t.GetYear(),t.GetMonth(),t.GetDay(),t.GetHour(),t.GetMinute(),t.GetSecond());
+			sprintf_s(buffer,256, "%04d-%02d-%02d %02d:%02d:%02d", t.GetYear(),t.GetMonth(),t.GetDay(),t.GetHour(),t.GetMinute(),t.GetSecond());
 			std::string time = std::string(buffer);
 #ifdef UNICODE
 			_ftprintf_s(fp,_T("%S : "),time.c_str());
@@ -161,7 +172,7 @@ bool CLog4CPP::LogOut(std::string text,bool isOverlayWrite)
 	return bOK;
 }
 
-std::string	CLog4CPP::GetFileExtensions(std::string &fileName)
+std::string	itas109::CLog4CPP::GetFileExtensions(std::string &fileName)
 {
 	std::string out = fileName;
 
@@ -192,7 +203,7 @@ std::string	CLog4CPP::GetFileExtensions(std::string &fileName)
 	return out;
 }
 
-std::string CLog4CPP::GetBaseDir(std::string & path)
+std::string itas109::CLog4CPP::GetBaseDir(std::string & path)
 {
 	std::string out = path;
 	int iSlashPos = path.find_last_of('\\');
@@ -210,4 +221,9 @@ std::string CLog4CPP::GetBaseDir(std::string & path)
 	}
 
 	return out;
+}
+
+std::string itas109::CLog4CPP::getVersion()
+{
+	return version;
 }

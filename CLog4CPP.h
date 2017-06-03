@@ -56,6 +56,15 @@
 **  改进
 **  1) 修复指针释放问题
 **  2) LogOut函数增加是否覆盖写入文件参数
+**************************************************************************************
+**  author: itas109  date:2017-06-03
+**  Blog：blog.csdn.net/itas109
+**  Version：2.1.1.170603
+**  改进
+**  1) 增加namespace
+**  2) 使用_s的安全函数
+**  3) 修复当程序运行超过一天后，日志内容依旧写入初始化当天文件的问题
+**  4) 增加版本号函数
 */
 #ifndef CLOG4CPP_H
 #define CLOG4CPP_H
@@ -65,43 +74,52 @@
 #include <direct.h>
 #include "atltime.h"
 
-class CLog4CPP
+namespace itas109
 {
-public:
+	class CLog4CPP
+	{
+	public:
 
-	CLog4CPP();
-	~CLog4CPP();
+		CLog4CPP();
+		~CLog4CPP();
 
-	//初始化
-	void Init(std::string stringpOutputFilename);
-	void Init();//按照当天日期生成日志文件
+		std::string getVersion();
 
-	//输出文字，类似与TRACE、printf
-	//isOverlayWrite 是否覆盖写入文件
-	bool LogOut(std::string text, bool isOverlayWrite = false);
+		//初始化
+		void Init(std::string stringpOutputFilename);
+		void Init();//按照当天日期生成日志文件
 
-	//设置使能
-	void IsEnable(bool bEnable);
+		//输出文字，类似与TRACE、printf
+		//isOverlayWrite 是否覆盖写入文件
+		bool LogOut(std::string text, bool isOverlayWrite = false);
 
-	//是否在每行加入时间戳
-	void IsPrintTime(bool b) {m_bPrintTime = b;}
+		//设置使能
+		void IsEnable(bool bEnable);
 
-protected:
-	//缓冲区
-	enum {TBUF_SIZE = 3000};
-	std::string m_tBuf[TBUF_SIZE];
+		//是否在每行加入时间戳
+		void IsPrintTime(bool b) { m_bPrintTime = b; }
 
-	std::string m_csFileName;
-	
-	//临界区
-	CRITICAL_SECTION  m_crit;
+	private:
+		//缓冲区
+		enum { TBUF_SIZE = 3000 };
+		std::string m_tBuf[TBUF_SIZE];
 
-	//使能
-	bool m_bEnable;
-	bool m_bPrintTime;
+		std::string m_csFileName;
 
-	//字符工具
-	std::string GetBaseDir(std::string & path);
-	std::string GetFileExtensions(std::string & fileName);
-};
+		//临界区
+		CRITICAL_SECTION  m_crit;
+
+		//使能
+		bool m_bEnable;//是否打印
+		bool m_bPrintTime;//是否加入时间戳
+		bool m_bNamedByDate;//是否以日期命名
+
+		//字符工具
+		std::string GetBaseDir(std::string & path);
+		std::string GetFileExtensions(std::string & fileName);
+
+		//class version
+		const std::string version = "2.1.1.170603";		
+	};
+}
 #endif CLOG4CPP_H
