@@ -27,3 +27,14 @@
 *.exe
 *.out
 *.app
+/Demo/Log4CPPConsole/Debug/*.ilk
+/Demo/Log4CPPConsole/Debug/*.pdb
+/Demo/Log4CPPConsole/ipch
+/Demo/Log4CPPConsole/Debug/Log4CPPConsole.ilk
+/Demo/Log4CPPConsole/Log4CPPConsole/Debug
+/Demo/Log4CPPConsole/Debug
+/Demo/Log4CPPConsole/Log4CPPConsole.sdf
+/Demo/Log4CPPConsole/Log4CPPConsole.opensdf
+/Demo/Log4CPPConsole/Log4CPPConsole.sdf
+/Demo/Log4CPPConsole/Log4CPPConsole.opensdf
+/Demo/Log4CPPConsole/Log4CPPConsole/ReadMe.txt
